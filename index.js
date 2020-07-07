@@ -231,7 +231,6 @@ export default class VideoPlayer extends Component {
         }
         var arg = arguments[0]
         if (arg.currentTime > arg.seekableDuration * 0.9) {
-            console.log('Acabouuuuuuuu')
             this.props.onEnd()
         }
         this.setState(state);
