@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import { Overlay } from 'react-native-elements';
-import Orientation from 'react-native-orientation';
+import Orientation from 'react-native-orientation-locker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 let { width, height } = Dimensions.get('window')
 // react-native-orientation
@@ -328,19 +328,31 @@ export default class VideoPlayer extends Component {
         Animated.parallel([
             Animated.timing(
                 this.animations.topControl.opacity,
-                { toValue: 0 }
+                {
+                    toValue: 0,
+                    useNativeDriver: false
+                }
             ),
             Animated.timing(
                 this.animations.topControl.marginTop,
-                { toValue: -100 }
+                {
+                    toValue: -100,
+                    useNativeDriver: false
+                }
             ),
             Animated.timing(
                 this.animations.bottomControl.opacity,
-                { toValue: 0 }
+                {
+                    toValue: 0,
+                    useNativeDriver: false
+                }
             ),
             Animated.timing(
                 this.animations.bottomControl.marginBottom,
-                { toValue: -100 }
+                {
+                    toValue: -100,
+                    useNativeDriver: false
+                }
             ),
         ]).start();
     }
@@ -354,19 +366,31 @@ export default class VideoPlayer extends Component {
         Animated.parallel([
             Animated.timing(
                 this.animations.topControl.opacity,
-                { toValue: 1 }
+                {
+                    toValue: 1,
+                    useNativeDriver: false
+                }
             ),
             Animated.timing(
                 this.animations.topControl.marginTop,
-                { toValue: 0 }
+                {
+                    toValue: 0,
+                    useNativeDriver: false
+                }
             ),
             Animated.timing(
                 this.animations.bottomControl.opacity,
-                { toValue: 1 }
+                {
+                    toValue: 1,
+                    useNativeDriver: false
+                }
             ),
             Animated.timing(
                 this.animations.bottomControl.marginBottom,
-                { toValue: 0 }
+                {
+                    toValue: 0,
+                    useNativeDriver: false
+                }
             ),
         ]).start();
     }
@@ -383,6 +407,7 @@ export default class VideoPlayer extends Component {
                         toValue: this.animations.loader.MAX_VALUE,
                         duration: 1500,
                         easing: Easing.linear,
+                        useNativeDriver: false
                     }
                 ),
                 Animated.timing(
@@ -391,6 +416,7 @@ export default class VideoPlayer extends Component {
                         toValue: 0,
                         duration: 0,
                         easing: Easing.linear,
+                        useNativeDriver: false
                     }
                 ),
             ]).start(this.loadAnimation.bind(this));
@@ -689,19 +715,10 @@ export default class VideoPlayer extends Component {
     */
 
     /**
-     * Before mounting, init our seekbar and volume bar
-     * pan responders.
-     */
-    componentWillMount() {
-        this.initSeekPanResponder();
-        this.initVolumePanResponder();
-    }
-
-    /**
      * To allow basic playback management from the outside
      * we have to handle possible props changes to state changes
      */
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(nextProps) {
         if (this.state.paused !== nextProps.paused) {
             this.setState({
                 paused: nextProps.paused
@@ -714,6 +731,8 @@ export default class VideoPlayer extends Component {
      * bar based on the volume property supplied to it.
      */
     componentDidMount() {
+        this.initSeekPanResponder();
+        this.initVolumePanResponder();
         const position = this.calculateVolumePositionFromVolume();
         let state = this.state;
         this.setVolumePosition(position);
@@ -1109,21 +1128,21 @@ export default class VideoPlayer extends Component {
         let { containerStyle } = this.styles
         return (
             <>
-                <TouchableOpacity 
-                onPress={() => this.toggleOverlay(() => { })}
-                style={{justifyContent: 'center', alignItems: 'center'}}
+                <TouchableOpacity
+                    onPress={() => this.toggleOverlay(() => { })}
+                    style={{ justifyContent: 'center', alignItems: 'center' }}
                 >
                     <Icon name="play" size={50} color="#fff" style={{
-                        position: 'absolute', 
+                        position: 'absolute',
                         zIndex: 9999
                     }} />
                     <View style={{
                         width: '100%',
                         height: '100%',
                         backgroundColor: 'rgba(0,0,0,0.5)',
-                        position: 'absolute', 
+                        position: 'absolute',
                         zIndex: 9998
-                        }}/>
+                    }} />
                     <Image
                         style={{ width: '100%', height: 200 }}
                         source={{ uri: this.props.thumb ?? '' }} />
